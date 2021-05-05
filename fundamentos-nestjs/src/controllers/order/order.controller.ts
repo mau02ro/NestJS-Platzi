@@ -1,4 +1,12 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 
 @Controller('order')
-export class OrderController {}
+export class OrderController {
+  @Post()
+  create(@Body() payload: any) {
+    return {
+      message: 'accion de crear',
+      payload,
+    };
+  }
+}
