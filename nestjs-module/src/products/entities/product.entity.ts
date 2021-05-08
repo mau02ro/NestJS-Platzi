@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-class Product {
+export class Product {
   id?: number;
   name: string;
   description: string;
@@ -8,4 +8,4 @@ class Product {
   image: string;
 }
 
-export default Product;
+
