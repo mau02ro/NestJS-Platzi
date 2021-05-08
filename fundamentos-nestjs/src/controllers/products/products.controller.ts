@@ -1,16 +1,33 @@
-import { Controller, Get, Post, Param, Body, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  Put,
+  Delete,
+  Query,
+  HttpCode,
+  HttpStatus,
+  // ParseIntPipe,
+} from '@nestjs/common';
+
+import { ProductsService } from 'src/services/products/products.service';
+import { ParseIntPipe } from 'src/commen/parse-int.pipe';
+
+import { CreateProductDto, UpdateProductDto } from 'src/dtos/products.dtos';
 
 @Controller('products')
 export class ProductsController {
+  constructor(private productsService: ProductsService) {}
+
   @Get()
   getProducts(
     @Query('limit') limit = 100,
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
-    return {
-      message: `products limit=${limit}, offset=${offset}, brand=${brand}`,
-    };
+    return this.productsService.findAll();
   }
 
   @Get('filter')
@@ -21,17 +38,23 @@ export class ProductsController {
   }
 
   @Get('/:producId')
-  getOne(@Param('producId') producId: string) {
-    return {
-      message: `product id -> ${producId}`,
-    };
+  @HttpCode(HttpStatus.ACCEPTED)
+  getOne(@Param('producId', ParseIntPipe) producId: number) {
+    return this.productsService.findOne(producId);
   }
 
   @Post()
-  create(@Body() payload: any) {
-    return {
-      message: 'accion de crear',
-      payload,
-    };
+  create(@Body() payload: CreateProductDto) {
+    return this.productsService.create(payload);
+  }
+
+  @Put(':id')
+  update(@Body() payload: UpdateProductDto, @Param('id') id: number) {
+    return this.productsService.update(+id, payload);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    return this.productsService.remove(+id);
   }
 }
