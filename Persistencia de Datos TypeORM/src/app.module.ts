@@ -20,6 +20,11 @@ import config from './config';
         API_KEY: Joi.number().required(),
         DATABASE_NAME: Joi.string().required(),
         DATABASE_PORT: Joi.number().required(),
+        POSTGRES_NAME: Joi.string().required(),
+        POSTGRES_PORT: Joi.number().required(),
+        POSTGRES_USER: Joi.string().required(),
+        POSTGRES_HOST: Joi.string().required(),
+        POSTGRES_PASS: Joi.string().required(),
       }),
     }),
     HttpModule,
@@ -36,6 +41,7 @@ import config from './config';
         const tasks = await http
           .get('https://jsonplaceholder.typicode.com/todos')
           .toPromise();
+
         return tasks.data;
       },
       inject: [HttpService],
