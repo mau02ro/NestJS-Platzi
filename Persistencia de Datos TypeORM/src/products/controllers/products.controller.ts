@@ -24,15 +24,15 @@ import { ProductsService } from './../services/products.service';
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
-  // @Get()
-  // @ApiOperation({ summary: 'List of products' })
-  // getProducts(
-  //   @Query('limit') limit = 100,
-  //   @Query('offset') offset = 0,
-  //   @Query('brand') brand: string,
-  // ) {
-  //   return this.productsService.findAll();
-  // }
+  @Get()
+  @ApiOperation({ summary: 'List of products' })
+  getProducts(
+    @Query('limit') limit = 100,
+    @Query('offset') offset = 0,
+    @Query('brand') brand: string,
+  ) {
+    return this.productsService.findAll();
+  }
 
   // @Get('filter')
   // getProductFilter() {
