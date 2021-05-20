@@ -18,6 +18,9 @@ export class BrandsService {
       where: {
         id,
       },
+      order: {
+        id: 'ASC',
+      },
       relations: ['products'],
     });
 

@@ -7,11 +7,16 @@ import { CreateProductDto, UpdateProductDto } from './../dtos/products.dtos';
 
 import { BrandsService } from './brands.service';
 
+import { Category } from '../entities/category.entity';
+import { Brand } from '../entities/brand.entity';
+
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product) private productRepo: Repository<Product>,
     private brandsService: BrandsService,
+    @InjectRepository(Category) private categoryRepo: Repository<Category>,
+    @InjectRepository(Brand) private brandsRepo: Repository<Brand>,
   ) {}
 
   findAll() {
@@ -21,7 +26,12 @@ export class ProductsService {
   }
 
   async findOne(id: number) {
-    const product = await this.productRepo.findOne(id);
+    const product = await this.productRepo.findOne({
+      where: {
+        id,
+      },
+      relations: ['brand', 'categories'],
+    });
 
     if (!product) {
       throw new NotFoundException(`Product #${id} not found`);
@@ -34,8 +44,14 @@ export class ProductsService {
     const newProduct = this.productRepo.create(data);
 
     if (data.brandId) {
-      const brand = await this.brandsService.findOne(data.brandId);
+      const brand = await this.brandsRepo.findOne(data.brandId);
       newProduct.brand = brand;
+    }
+
+    if (data.categoriesIds) {
+      console.log(data);
+      const categories = await this.categoryRepo.findByIds(data.categoriesIds);
+      newProduct.categories = categories;
     }
 
     return this.productRepo.save(newProduct);
@@ -45,7 +61,7 @@ export class ProductsService {
     const product = await this.productRepo.findOne(id);
 
     if (changes.brandId) {
-      const brand = await this.brandsService.findOne(changes.brandId);
+      const brand = await this.brandsRepo.findOne(changes.brandId);
       product.brand = brand;
     }
 
