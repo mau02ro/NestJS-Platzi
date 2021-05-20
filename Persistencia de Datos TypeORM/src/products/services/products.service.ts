@@ -65,7 +65,44 @@ export class ProductsService {
       product.brand = brand;
     }
 
+    if (changes.categoriesIds) {
+      const categories = await this.categoryRepo.findByIds(
+        changes.categoriesIds,
+      );
+      product.categories = categories;
+    }
+
     this.productRepo.merge(product, changes);
+
+    return this.productRepo.save(product);
+  }
+
+  async removeCategoryByProduct(productId: number, categoryId: number) {
+    const product = await this.productRepo.findOne({
+      where: {
+        id: productId,
+      },
+      relations: ['categories'],
+    });
+
+    product.categories = product.categories.filter(
+      (category) => category.id !== categoryId,
+    );
+
+    return this.productRepo.save(product);
+  }
+
+  async addCategoryByProduct(productId: number, categoryId: number) {
+    const product = await this.productRepo.findOne({
+      where: {
+        id: productId,
+      },
+      relations: ['categories'],
+    });
+
+    const category = await this.categoryRepo.findOne(categoryId);
+
+    product.categories.push(category);
 
     return this.productRepo.save(product);
   }
