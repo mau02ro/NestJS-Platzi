@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,18 +11,22 @@ import {
 import { Product } from 'src/products/entities/product.entity';
 import { Order } from './order.entity';
 
-@Entity()
+@Entity({
+  name: 'orders_items',
+})
 export class OrderItem {
   @PrimaryGeneratedColumn()
   id: number;
 
   @CreateDateColumn({
+    name: 'crate_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   crateAt: string;
 
   @UpdateDateColumn({
+    name: 'update_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })

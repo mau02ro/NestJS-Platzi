@@ -10,18 +10,22 @@ import {
 import { Customer } from './customer.entity';
 import { OrderItem } from './order-item.entity';
 
-@Entity()
+@Entity({
+  name: 'orders',
+})
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
   @CreateDateColumn({
+    name: 'crate_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   crateAt: string;
 
   @UpdateDateColumn({
+    name: 'update_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })

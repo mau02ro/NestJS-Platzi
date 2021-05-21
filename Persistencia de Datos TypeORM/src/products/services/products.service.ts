@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Between, FindConditions } from 'typeorm';
 
 import { Product } from './../entities/product.entity';
 import {
@@ -25,10 +25,19 @@ export class ProductsService {
 
   findAll(params?: FilterProductsDto) {
     if (params) {
+      const where: FindConditions<Product> = {};
+
       const { limit, offset } = params;
+      const { maxPrice, minPrice } = params;
+
+      if (minPrice && maxPrice) {
+        where.price = Between(minPrice, maxPrice);
+      }
+
       return this.productRepo.find({
         take: limit,
         skip: offset,
+        where,
         order: {
           id: 'ASC',
         },
