@@ -1,12 +1,16 @@
-import { IsString, IsUrl, IsNotEmpty } from 'class-validator';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export class Category {
-  @IsString()
-  @IsNotEmpty()
-  readonly name: string;
+@Schema()
+export class Category extends Document {
+  @Prop({
+    required: true,
+    unique: true,
+  })
+  name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @IsUrl()
-  readonly image: string;
+  @Prop()
+  image: string;
 }
+
+export const CategorySchema = SchemaFactory.createForClass(Category);
